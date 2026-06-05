@@ -1,0 +1,918 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Clínica — Vitória Freitas</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#FDF0F3;--surface:#FFF;--s2:#FBE7EC;--s3:#F5D4DC;--border:#F0C4CF;--border2:#E8A8B8;--text:#2D1A1F;--text2:#7A5060;--text3:#B08898;--accent:#C45C7A;--ad:#A84568;--al:#FDF0F3;--al2:#FCEEF2;--green:#4A7C6F;--gl:#E8F2EF;--gold:#A07B3A;--gol:#F5F0E4;--red:#C0392B;--rl:#FDECEA;--r:10px;--rl2:16px;}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;font-size:15px;}
+#auth-screen{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:2rem;background:linear-gradient(135deg,#FDF0F3,#FCEEF2 50%,#F5D4DC);}
+.auth-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--rl2);padding:2.5rem;max-width:440px;width:100%;box-shadow:0 8px 40px rgba(196,92,122,.1);}
+.auth-logo{font-family:'DM Serif Display',serif;font-size:26px;color:var(--accent);text-align:center;margin-bottom:2px;}
+.auth-sub{font-size:12px;color:var(--text3);text-align:center;letter-spacing:.08em;text-transform:uppercase;margin-bottom:1.5rem;}
+.step{background:var(--s2);border-radius:var(--r);padding:1rem;margin-bottom:.75rem;}
+.step-n{font-size:11px;font-weight:500;color:var(--accent);letter-spacing:.1em;text-transform:uppercase;margin-bottom:2px;}
+.step-t{font-size:13px;font-weight:500;margin-bottom:3px;}
+.step-d{font-size:12px;color:var(--text2);line-height:1.5;}
+.step-d a{color:var(--accent);text-decoration:none;font-weight:500;}
+.field{width:100%;padding:9px 12px;border:1px solid var(--border);border-radius:var(--r);font-size:13px;font-family:'DM Sans',sans-serif;background:var(--surface);color:var(--text);margin-top:6px;}
+.field:focus{outline:none;border-color:var(--accent);}
+.btn-login{width:100%;padding:11px;background:var(--accent);color:#fff;border:none;border-radius:var(--r);font-size:14px;font-family:'DM Sans',sans-serif;font-weight:500;cursor:pointer;margin-top:1.25rem;transition:opacity .15s;}
+.btn-login:hover{opacity:.88;}
+#app{display:none;}
+.sidebar{position:fixed;left:0;top:0;bottom:0;width:215px;background:var(--surface);border-right:1px solid var(--border);display:flex;flex-direction:column;}
+.sb-brand{padding:1.25rem;border-bottom:1px solid var(--border);}
+.sb-name{font-family:'DM Serif Display',serif;font-size:17px;color:var(--accent);}
+.sb-crp{font-size:11px;color:var(--text3);}
+.ni{display:flex;align-items:center;gap:9px;padding:9px 1.25rem;font-size:13px;color:var(--text2);cursor:pointer;transition:all .12s;border-left:2px solid transparent;}
+.ni:hover{background:var(--s2);color:var(--text);}
+.ni.active{background:var(--al2);color:var(--accent);border-left-color:var(--accent);font-weight:500;}
+.ns{height:1px;background:var(--border);margin:.4rem 0;}
+.sb-foot{margin-top:auto;padding:.75rem 1.25rem;border-top:1px solid var(--border);font-size:11px;color:var(--text3);}
+.main{margin-left:215px;padding:1.75rem 2.25rem;min-height:100vh;}
+.sec{display:none;}.sec.active{display:block;}
+.sec-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:1.5rem;padding-bottom:.875rem;border-bottom:1px solid var(--border);}
+.sec-title{font-family:'DM Serif Display',serif;font-size:22px;}
+.sec-title em{color:var(--accent);font-style:italic;}
+.btn{padding:8px 16px;border-radius:var(--r);font-size:13px;font-family:'DM Sans',sans-serif;font-weight:500;cursor:pointer;display:inline-flex;align-items:center;gap:6px;transition:all .15s;border:none;}
+.btn-p{background:var(--accent);color:#fff;}.btn-p:hover{background:var(--ad);}.btn-p:disabled{opacity:.5;cursor:not-allowed;}
+.btn-o{background:transparent;color:var(--text);border:1px solid var(--border2);}.btn-o:hover{background:var(--s2);}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--rl2);padding:1.25rem;margin-bottom:1rem;}
+.card-title{font-size:11px;font-weight:500;color:var(--text3);letter-spacing:.08em;text-transform:uppercase;margin-bottom:1rem;}
+.metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:.75rem;margin-bottom:1.5rem;}
+.metric{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:1rem;}
+.m-label{font-size:11px;color:var(--text3);margin-bottom:4px;}
+.m-value{font-family:'DM Serif Display',serif;font-size:26px;color:var(--text);}
+.m-sub{font-size:11px;color:var(--text2);margin-top:2px;}
+.week-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;margin-bottom:1.25rem;}
+.day-col{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:8px;min-height:85px;cursor:pointer;transition:all .12s;}
+.day-col:hover,.day-col.today{border-color:var(--accent);background:var(--al2);}
+.day-label{font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:.05em;margin-bottom:3px;}
+.day-num{font-family:'DM Serif Display',serif;font-size:18px;margin-bottom:5px;}
+.day-col.today .day-num{color:var(--accent);}
+.day-event{font-size:10px;background:var(--s2);color:var(--accent);border-radius:4px;padding:2px 5px;margin-bottom:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-weight:500;}
+.ev-row{display:flex;align-items:flex-start;gap:12px;padding:11px 0;border-bottom:1px solid var(--border);}
+.ev-row:last-child{border-bottom:none;}
+.ev-time{font-size:12px;color:var(--text2);min-width:90px;padding-top:2px;}
+.ev-dot{width:7px;height:7px;border-radius:50%;background:var(--accent);margin-top:5px;flex-shrink:0;}
+.ev-title{font-size:13px;font-weight:500;}
+.ev-sub{font-size:12px;color:var(--text2);margin-top:1px;}
+.pgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(255px,1fr));gap:.875rem;}
+.pcard{background:var(--surface);border:1px solid var(--border);border-radius:var(--rl2);padding:1.125rem;cursor:pointer;transition:all .15s;}
+.pcard:hover{border-color:var(--accent);box-shadow:0 4px 16px rgba(196,92,122,.1);transform:translateY(-1px);}
+.p-av{width:42px;height:42px;border-radius:50%;background:var(--s2);color:var(--accent);display:flex;align-items:center;justify-content:center;font-weight:500;font-size:14px;margin-bottom:9px;}
+.p-name{font-weight:500;font-size:14px;margin-bottom:2px;}
+.p-meta{font-size:12px;color:var(--text2);}
+.p-valor{font-size:12px;color:var(--green);font-weight:500;margin-top:4px;}
+.p-acts{display:flex;gap:5px;margin-top:10px;flex-wrap:wrap;}
+.pbtn{flex:1;padding:5px 8px;border-radius:var(--r);font-size:11px;font-family:'DM Sans',sans-serif;cursor:pointer;border:1px solid var(--border);background:transparent;color:var(--text2);font-weight:500;transition:all .12s;white-space:nowrap;}
+.pbtn:hover{background:var(--s2);color:var(--text);}
+.pbtn.pp{background:var(--accent);color:#fff;border-color:var(--accent);}.pbtn.pp:hover{background:var(--ad);}
+.fg{display:grid;grid-template-columns:1fr 1fr;gap:.875rem;}
+.fg3{grid-template-columns:1fr 1fr 1fr;}
+.ff{grid-column:1/-1;}
+.fl{display:block;font-size:11px;font-weight:500;color:var(--text2);margin-bottom:4px;text-transform:uppercase;letter-spacing:.06em;}
+.fi{width:100%;padding:8px 11px;border:1px solid var(--border);border-radius:var(--r);font-size:13px;font-family:'DM Sans',sans-serif;background:var(--surface);color:var(--text);transition:border-color .15s;}
+.fi:focus{outline:none;border-color:var(--accent);}
+textarea.fi{resize:vertical;min-height:85px;line-height:1.6;}
+select.fi{cursor:pointer;}
+.fsec{font-family:'DM Serif Display',serif;font-size:16px;color:var(--accent);margin:1.5rem 0 .875rem;padding-bottom:5px;border-bottom:1px solid var(--border);}
+.fa{display:flex;justify-content:flex-end;gap:8px;margin-top:1.5rem;padding-top:1.25rem;border-top:1px solid var(--border);}
+.chk-grp{display:flex;flex-wrap:wrap;gap:8px;margin-top:4px;}
+.chk-item{display:flex;align-items:center;gap:5px;font-size:13px;cursor:pointer;}
+.chk-item input{accent-color:var(--accent);}
+.ftbl{width:100%;border-collapse:collapse;}
+.ftbl th{font-size:11px;font-weight:500;color:var(--text3);text-transform:uppercase;letter-spacing:.06em;padding:8px 12px;text-align:left;border-bottom:1px solid var(--border);}
+.ftbl td{padding:10px 12px;font-size:13px;border-bottom:1px solid var(--border);}
+.ftbl tr:last-child td{border-bottom:none;}
+.ftbl tr:hover td{background:var(--s2);}
+.ftot td{background:var(--s2);font-weight:500;}
+.badge{display:inline-flex;align-items:center;padding:2px 9px;border-radius:20px;font-size:11px;font-weight:500;}
+.badge-p{background:var(--s2);color:var(--accent);}
+.badge-g{background:var(--gl);color:var(--green);}
+.modal-ov{position:fixed;inset:0;background:rgba(45,26,31,.4);display:flex;align-items:center;justify-content:center;z-index:999;padding:1rem;}
+.modal{background:var(--surface);border-radius:var(--rl2);padding:1.75rem;width:100%;max-width:520px;max-height:90vh;overflow-y:auto;box-shadow:0 20px 60px rgba(196,92,122,.2);}
+.modal-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:1.25rem;padding-bottom:.875rem;border-bottom:1px solid var(--border);}
+.modal-title{font-family:'DM Serif Display',serif;font-size:18px;}
+.modal-x{background:none;border:none;font-size:22px;cursor:pointer;color:var(--text3);line-height:1;padding:0 4px;}
+.modal-x:hover{color:var(--accent);}
+.pv-wrap{background:var(--surface);border:1px solid var(--border);border-radius:var(--rl2);overflow:hidden;}
+.pv-hdr{background:linear-gradient(135deg,var(--accent),var(--ad));padding:1.5rem 2rem;color:#fff;}
+.pv-name{font-family:'DM Serif Display',serif;font-size:22px;margin-bottom:4px;}
+.pv-meta{font-size:13px;opacity:.85;}
+.pv-body{padding:1.5rem 2rem;}
+.pv-sec{margin-bottom:1.5rem;}
+.pv-sec-t{font-size:11px;font-weight:500;color:var(--accent);letter-spacing:.1em;text-transform:uppercase;margin-bottom:.75rem;padding-bottom:4px;border-bottom:1px solid var(--s3);}
+.pv-txt{font-size:13px;color:var(--text);line-height:1.6;white-space:pre-wrap;}
+.evc{border:1px solid var(--border);border-radius:var(--r);padding:1rem;margin-bottom:.75rem;background:var(--al);}
+.evc-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:.75rem;}
+.evc-title{font-weight:500;font-size:13px;color:var(--accent);}
+.evc-date{font-size:12px;color:var(--text3);}
+.evc-bl{margin-bottom:.625rem;}
+.evc-bl-label{font-size:11px;font-weight:500;color:var(--text3);text-transform:uppercase;letter-spacing:.05em;margin-bottom:2px;}
+.evc-bl-txt{font-size:13px;color:var(--text);line-height:1.5;}
+.loading{display:flex;align-items:center;gap:10px;padding:2rem;color:var(--text2);font-size:13px;}
+.spinner{width:16px;height:16px;border:2px solid var(--border2);border-top-color:var(--accent);border-radius:50%;animation:spin .7s linear infinite;flex-shrink:0;}
+@keyframes spin{to{transform:rotate(360deg);}}
+.empty{text-align:center;padding:3rem 2rem;color:var(--text3);}
+.empty-icon{font-size:36px;margin-bottom:.75rem;}
+.empty-t{font-size:14px;color:var(--text2);margin-bottom:4px;}
+.toast{position:fixed;bottom:1.25rem;right:1.25rem;background:var(--text);color:#fff;padding:11px 16px;border-radius:var(--r);font-size:13px;opacity:0;pointer-events:none;transition:opacity .25s;z-index:9999;max-width:320px;line-height:1.4;}
+.toast.show{opacity:1;}
+::-webkit-scrollbar{width:5px;}
+::-webkit-scrollbar-thumb{background:var(--border2);border-radius:3px;}
+</style>
+</head>
+<body>
+<!-- AUTH -->
+<div id="auth-screen">
+  <div class="auth-card">
+    <div class="auth-logo">Vitória Freitas</div>
+    <div class="auth-sub">CRP 05/72596 · Sistema Clínico</div>
+    <div class="step"><div class="step-n">Passo 1</div><div class="step-t">Ative as APIs no Google Cloud</div>
+      <div class="step-d">Em <a href="https://console.cloud.google.com" target="_blank">console.cloud.google.com</a> ative <strong>Google Calendar API</strong> e <strong>Google Drive API</strong>. Em "OAuth consent screen" adicione seu email como usuário de teste.</div></div>
+    <div class="step"><div class="step-n">Passo 2</div><div class="step-t">Crie o Client ID (Web App)</div>
+      <div class="step-d">Credentials → Create → OAuth Client ID → Web App. Em "Authorized JavaScript origins" adicione: <strong>https://psicologavitoriafreitas-cloud.github.io</strong></div></div>
+    <div class="step"><div class="step-n">Passo 3</div><div class="step-t">Cole o Client ID abaixo</div>
+      <div class="step-d"><input class="field" id="cid" placeholder="xxxx.apps.googleusercontent.com"></div></div>
+    <button class="btn-login" onclick="iniciarAuth()">Entrar com Google →</button>
+  </div>
+</div>
+<!-- APP -->
+<div id="app">
+  <nav class="sidebar">
+    <div class="sb-brand"><div class="sb-name">Vitória Freitas</div><div class="sb-crp">CRP 05/72596</div></div>
+    <div style="padding:.5rem 0">
+      <div class="ni active" onclick="showSec('agenda')">📅 Agenda</div>
+      <div class="ni" onclick="showSec('pacientes')">👤 Pacientes</div>
+      <div class="ns"></div>
+      <div class="ni" onclick="showSec('anamnese')">📋 Nova anamnese</div>
+      <div class="ni" onclick="showSec('evolucao')">✏️ Registro de sessão</div>
+      <div class="ns"></div>
+      <div class="ni" onclick="showSec('financeiro')">💰 Financeiro</div>
+    </div>
+    <div class="sb-foot"><div id="uemail" style="margin-bottom:5px;word-break:break-all"></div><span style="cursor:pointer;color:var(--accent)" onclick="sair()">Sair →</span></div>
+  </nav>
+  <main class="main">
+    <!-- AGENDA -->
+    <div id="sec-agenda" class="sec active">
+      <div class="sec-hdr"><h1 class="sec-title">Agenda <em>da semana</em></h1>
+        <div style="display:flex;gap:8px"><button class="btn btn-o" onclick="loadAgenda()">↺ Atualizar</button><button class="btn btn-p" onclick="abrirMC()">+ Nova consulta</button></div></div>
+      <div id="agenda-ct"><div class="loading"><div class="spinner"></div> Carregando...</div></div>
+    </div>
+    <!-- PACIENTES -->
+    <div id="sec-pacientes" class="sec">
+      <div class="sec-hdr"><h1 class="sec-title">Meus <em>pacientes</em></h1><button class="btn btn-p" onclick="showSec('anamnese')">+ Nova anamnese</button></div>
+      <div id="pac-ct"><div class="loading"><div class="spinner"></div> Carregando...</div></div>
+    </div>
+    <!-- PRONTUÁRIO VIEW -->
+    <div id="sec-prontuario" class="sec">
+      <div class="sec-hdr"><h1 class="sec-title">Prontuário <em>do paciente</em></h1>
+        <div style="display:flex;gap:8px"><button class="btn btn-o" onclick="showSec('pacientes')">← Voltar</button><button class="btn btn-p" id="btn-add-ev">+ Registrar sessão</button></div></div>
+      <div id="pv-ct"></div>
+    </div>
+    <!-- ANAMNESE -->
+    <div id="sec-anamnese" class="sec">
+      <div class="sec-hdr"><h1 class="sec-title">Nova <em>anamnese</em></h1><span class="badge badge-p">📁 Google Drive</span></div>
+      <div class="card">
+        <div class="fsec">1. Identificação</div>
+        <div class="fg">
+          <div class="ff"><label class="fl">Nome completo *</label><input class="fi" id="a-nome" placeholder="Nome completo"></div>
+          <div><label class="fl">Nome social</label><input class="fi" id="a-soc" placeholder="Se houver"></div>
+          <div><label class="fl">CPF</label><input class="fi" id="a-cpf" placeholder="000.000.000-00" maxlength="14"></div>
+          <div><label class="fl">Data de nascimento</label><input type="date" class="fi" id="a-nasc"></div>
+          <div><label class="fl">Sexo / Gênero</label><select class="fi" id="a-gen"><option value="">Selecione</option><option>Feminino</option><option>Masculino</option><option>Não-binário</option><option>Transgênero feminino</option><option>Transgênero masculino</option><option>Prefiro não informar</option></select></div>
+          <div><label class="fl">Estado civil</label><select class="fi" id="a-civil"><option value="">Selecione</option><option>Solteiro/a</option><option>Namorando</option><option>Casado/a</option><option>União estável</option><option>Divorciado/a</option><option>Viúvo/a</option></select></div>
+          <div><label class="fl">Profissão / Ocupação</label><input class="fi" id="a-prof" placeholder="Profissão"></div>
+          <div><label class="fl">Escolaridade</label><select class="fi" id="a-escol"><option value="">Selecione</option><option>Fund. incompleto</option><option>Fund. completo</option><option>Médio incompleto</option><option>Médio completo</option><option>Superior incompleto</option><option>Superior completo</option><option>Pós-graduação</option></select></div>
+          <div><label class="fl">Telefone / WhatsApp</label><input class="fi" id="a-tel" placeholder="(21) 9xxxx-xxxx"></div>
+          <div><label class="fl">E-mail</label><input type="email" class="fi" id="a-email"></div>
+          <div><label class="fl">Endereço</label><input class="fi" id="a-end" placeholder="Rua, número, bairro"></div>
+          <div><label class="fl">Cidade / Estado</label><input class="fi" id="a-cidade" placeholder="Rio de Janeiro / RJ"></div>
+          <div><label class="fl">Pessoa de referência / emergência</label><input class="fi" id="a-ref" placeholder="Nome e parentesco"></div>
+          <div><label class="fl">Telefone da referência</label><input class="fi" id="a-ref-tel" placeholder="(21) 9xxxx-xxxx"></div>
+        </div>
+        <div class="fsec">2. Dados do atendimento</div>
+        <div class="fg">
+          <div><label class="fl">Formato</label><select class="fi" id="a-modal"><option>Online (Google Meet)</option><option>Presencial</option><option>Híbrido</option></select></div>
+          <div><label class="fl">Encaminhado por</label><select class="fi" id="a-enc"><option value="">Selecione</option><option>Indicação familiar</option><option>Indicação de amigo</option><option>Indicação médica</option><option>Instagram</option><option>Google</option><option>Plataforma online</option><option>Outro</option></select></div>
+          <div><label class="fl">Valor da sessão (R$)</label><input type="number" class="fi" id="a-valor" placeholder="Ex: 180"></div>
+          <div><label class="fl">Frequência</label><select class="fi" id="a-freq"><option>Semanal</option><option>Quinzenal</option><option>Mensal</option></select></div>
+          <div><label class="fl">Já realizou terapia anterior?</label><select class="fi" id="a-tant"><option value="">Selecione</option><option>Não</option><option>Sim</option></select></div>
+          <div><label class="fl">Qual abordagem?</label><input class="fi" id="a-abord" placeholder="Ex: TCC, Psicanálise..."></div>
+          <div><label class="fl">Por quanto tempo?</label><input class="fi" id="a-ttemps" placeholder="Ex: 1 ano"></div>
+          <div class="ff"><label class="fl">Como foi a experiência?</label><textarea class="fi" id="a-exp-ant" style="min-height:60px"></textarea></div>
+        </div>
+        <div class="fsec">3. Queixa principal</div>
+        <div style="display:flex;flex-direction:column;gap:.875rem">
+          <div><label class="fl">O que motivou a busca por atendimento neste momento?</label><textarea class="fi" id="a-queixa" placeholder="Nas palavras do paciente..."></textarea></div>
+          <div><label class="fl">Há quanto tempo isso acontece?</label><input class="fi" id="a-tqueixa" placeholder="Ex: Há 6 meses, desde a infância..."></div>
+          <div><label class="fl">Como essa questão afeta sua rotina, relacionamentos ou trabalho?</label><textarea class="fi" id="a-impacto"></textarea></div>
+        </div>
+        <div class="fsec">4. Expectativas sobre o processo terapêutico</div>
+        <div style="display:flex;flex-direction:column;gap:.875rem">
+          <div><label class="fl">O que espera da terapia/análise?</label><textarea class="fi" id="a-expect"></textarea></div>
+          <div><label class="fl">Existe algo específico que gostaria de compreender ou mudar?</label><textarea class="fi" id="a-mudar"></textarea></div>
+        </div>
+        <div class="fsec">5. História pessoal e desenvolvimento</div>
+        <div style="display:flex;flex-direction:column;gap:.875rem">
+          <div style="font-size:12px;font-weight:500;color:var(--accent);text-transform:uppercase;letter-spacing:.06em">Infância</div>
+          <div><label class="fl">Como descreve sua infância?</label><textarea class="fi" id="a-inf"></textarea></div>
+          <div><label class="fl">Quem participou da sua criação?</label><textarea class="fi" id="a-cria" style="min-height:60px"></textarea></div>
+          <div><label class="fl">Como era a relação com seus cuidadores?</label><textarea class="fi" id="a-cuid"></textarea></div>
+          <div><label class="fl">Recordações marcantes da infância</label><textarea class="fi" id="a-rec"></textarea></div>
+          <div><label class="fl">Vivenciou situações de violência, abandono, perdas ou traumas?</label><textarea class="fi" id="a-traum"></textarea></div>
+          <div style="font-size:12px;font-weight:500;color:var(--accent);text-transform:uppercase;letter-spacing:.06em;margin-top:.5rem">Adolescência</div>
+          <div><label class="fl">Como foi sua adolescência?</label><textarea class="fi" id="a-adol"></textarea></div>
+          <div><label class="fl">Como eram suas relações sociais e familiares nessa fase?</label><textarea class="fi" id="a-rel-adol"></textarea></div>
+          <div><label class="fl">Houve acontecimentos importantes ou difíceis?</label><textarea class="fi" id="a-ac-adol"></textarea></div>
+        </div>
+        <div class="fsec">6. História familiar</div>
+        <div style="display:flex;flex-direction:column;gap:.875rem">
+          <div><label class="fl">Com quem mora atualmente?</label><input class="fi" id="a-mora"></div>
+          <div><label class="fl">Como descreve sua dinâmica familiar?</label><textarea class="fi" id="a-din"></textarea></div>
+          <div class="fg">
+            <div><label class="fl">Relação com a mãe</label><textarea class="fi" id="a-mae" style="min-height:70px"></textarea></div>
+            <div><label class="fl">Relação com o pai</label><textarea class="fi" id="a-pai" style="min-height:70px"></textarea></div>
+            <div><label class="fl">Relação com irmãos</label><textarea class="fi" id="a-irm" style="min-height:70px"></textarea></div>
+            <div><label class="fl">Relação com parceiro/a</label><textarea class="fi" id="a-parc" style="min-height:70px"></textarea></div>
+          </div>
+          <div><label class="fl">Conflitos familiares frequentes?</label><textarea class="fi" id="a-conf" style="min-height:60px"></textarea></div>
+          <div class="fg">
+            <div><label class="fl">Histórico familiar — transtornos psicológicos</label><input class="fi" id="a-hpsic" placeholder="Quem e qual..."></div>
+            <div><label class="fl">Histórico familiar — dependência química</label><input class="fi" id="a-hdep" placeholder="Se houver..."></div>
+            <div><label class="fl">Histórico familiar — violência</label><input class="fi" id="a-hviol" placeholder="Se houver..."></div>
+            <div><label class="fl">Histórico familiar — suicídio</label><input class="fi" id="a-hsuic" placeholder="Se houver..."></div>
+          </div>
+        </div>
+        <div class="fsec">7. Relacionamentos afetivos e sociais</div>
+        <div style="display:flex;flex-direction:column;gap:.875rem">
+          <div><label class="fl">Como costuma se relacionar afetivamente?</label><textarea class="fi" id="a-afet"></textarea></div>
+          <div><label class="fl">Possui amizades ou rede de apoio?</label><textarea class="fi" id="a-amigos" style="min-height:60px"></textarea></div>
+          <div><label class="fl">Sente dificuldade em confiar ou se vincular?</label><textarea class="fi" id="a-vinc" style="min-height:60px"></textarea></div>
+          <div><label class="fl">Costuma se sentir sozinho/a?</label><textarea class="fi" id="a-sol" style="min-height:60px"></textarea></div>
+        </div>
+        <div class="fsec">8. Vida acadêmica e profissional</div>
+        <div style="display:flex;flex-direction:column;gap:.875rem">
+          <div><label class="fl">Como foi sua experiência escolar?</label><textarea class="fi" id="a-esc"></textarea></div>
+          <div><label class="fl">Dificuldades de concentração, aprendizagem ou socialização?</label><textarea class="fi" id="a-dif" style="min-height:60px"></textarea></div>
+          <div><label class="fl">Como está sua vida profissional atualmente?</label><textarea class="fi" id="a-profl"></textarea></div>
+          <div><label class="fl">O trabalho gera sofrimento, ansiedade ou esgotamento?</label><textarea class="fi" id="a-tsofrj" style="min-height:60px"></textarea></div>
+        </div>
+        <div class="fsec">9. Saúde física e histórico médico</div>
+        <div style="display:flex;flex-direction:column;gap:.875rem">
+          <div><label class="fl">Doenças, diagnósticos ou condições médicas</label><textarea class="fi" id="a-doenc" style="min-height:60px"></textarea></div>
+          <div><label class="fl">Medicações em uso</label><textarea class="fi" id="a-meds" style="min-height:60px" placeholder="Nome, dose, prescritor..."></textarea></div>
+          <div class="fg">
+            <div><label class="fl">Tratamento psiquiátrico anterior</label><input class="fi" id="a-psiq" placeholder="Se sim, quando e por quê..."></div>
+            <div><label class="fl">Internação anterior</label><input class="fi" id="a-int" placeholder="Se sim, motivo e período..."></div>
+            <div><label class="fl">Sono</label><select class="fi" id="a-sono"><option value="">Selecione</option><option>Sem dificuldades</option><option>Insônia leve</option><option>Insônia moderada/grave</option><option>Hipersonia</option><option>Pesadelos frequentes</option></select></div>
+            <div><label class="fl">Alimentação</label><select class="fi" id="a-alim"><option value="">Selecione</option><option>Sem dificuldades</option><option>Compulsão alimentar</option><option>Restrição alimentar</option><option>Histórico de TA</option></select></div>
+            <div><label class="fl">Libido</label><select class="fi" id="a-lib"><option value="">Selecione</option><option>Preservada</option><option>Diminuída</option><option>Aumentada</option><option>Ausente</option></select></div>
+            <div><label class="fl">Energia / disposição</label><select class="fi" id="a-enrg"><option value="">Selecione</option><option>Boa</option><option>Variável</option><option>Baixa</option><option>Muito baixa</option></select></div>
+          </div>
+        </div>
+        <div class="fsec">10. Saúde mental e aspectos emocionais</div>
+        <div style="display:flex;flex-direction:column;gap:.875rem">
+          <div><label class="fl">Costuma sentir com frequência</label>
+            <div class="chk-grp">
+              <label class="chk-item"><input type="checkbox" class="ec" value="Ansiedade"> Ansiedade</label>
+              <label class="chk-item"><input type="checkbox" class="ec" value="Angústia"> Angústia</label>
+              <label class="chk-item"><input type="checkbox" class="ec" value="Tristeza"> Tristeza</label>
+              <label class="chk-item"><input type="checkbox" class="ec" value="Irritabilidade"> Irritabilidade</label>
+              <label class="chk-item"><input type="checkbox" class="ec" value="Culpa"> Culpa</label>
+              <label class="chk-item"><input type="checkbox" class="ec" value="Medo"> Medo</label>
+              <label class="chk-item"><input type="checkbox" class="ec" value="Vazio"> Vazio</label>
+              <label class="chk-item"><input type="checkbox" class="ec" value="Desânimo"> Desânimo</label>
+              <label class="chk-item"><input type="checkbox" class="ec" value="Oscilações de humor"> Oscilações de humor</label>
+            </div>
+          </div>
+          <div><label class="fl">Descreva</label><textarea class="fi" id="a-emo-desc"></textarea></div>
+          <div><label class="fl">Já teve crises de ansiedade / pânico?</label><textarea class="fi" id="a-panic" style="min-height:60px"></textarea></div>
+          <div><label class="fl">Já pensou em morrer ou em suicídio?</label><textarea class="fi" id="a-suic" style="min-height:60px"></textarea></div>
+          <div><label class="fl">Já realizou automutilação?</label><textarea class="fi" id="a-autom" style="min-height:60px"></textarea></div>
+        </div>
+        <div class="fsec">11. Uso de substâncias</div>
+        <div class="fg">
+          <div><label class="fl">Álcool</label><input class="fi" id="a-alc" placeholder="Frequência e quantidade"></div>
+          <div><label class="fl">Cigarro / tabaco</label><input class="fi" id="a-cig" placeholder="Frequência"></div>
+          <div><label class="fl">Maconha</label><input class="fi" id="a-mac" placeholder="Frequência"></div>
+          <div><label class="fl">Outras substâncias</label><input class="fi" id="a-osub" placeholder="Quais e frequência"></div>
+        </div>
+        <div class="fsec">12. Sexualidade</div>
+        <div style="display:flex;flex-direction:column;gap:.875rem">
+          <div><label class="fl">Como percebe sua relação com sua sexualidade?</label><textarea class="fi" id="a-sex"></textarea></div>
+          <div><label class="fl">Existe alguma questão relacionada à sexualidade que gostaria de trabalhar?</label><textarea class="fi" id="a-sext" style="min-height:60px"></textarea></div>
+        </div>
+        <div class="fsec">13. Rotina e autocuidado</div>
+        <div style="display:flex;flex-direction:column;gap:.875rem">
+          <div><label class="fl">Como é sua rotina atualmente?</label><textarea class="fi" id="a-rot"></textarea></div>
+          <div><label class="fl">O que costuma fazer para relaxar ou cuidar de si?</label><textarea class="fi" id="a-auto" style="min-height:60px"></textarea></div>
+          <div><label class="fl">Possui hobbies ou atividades prazerosas?</label><textarea class="fi" id="a-hob" style="min-height:60px"></textarea></div>
+        </div>
+        <div class="fsec">14. Observações clínicas (psicóloga)</div>
+        <div style="display:flex;flex-direction:column;gap:.875rem">
+          <div><label class="fl">Impressões iniciais</label><textarea class="fi" id="a-imp"></textarea></div>
+          <div><label class="fl">Afetos predominantes</label><textarea class="fi" id="a-afts" style="min-height:60px"></textarea></div>
+          <div><label class="fl">Dinâmica familiar observada</label><textarea class="fi" id="a-dinobs" style="min-height:60px"></textarea></div>
+          <div><label class="fl">Mecanismos de defesa percebidos</label><textarea class="fi" id="a-def" style="min-height:60px"></textarea></div>
+          <div><label class="fl">Hipóteses clínicas iniciais</label><textarea class="fi" id="a-hip"></textarea></div>
+          <div><label class="fl">Transferência / contratransferência</label><textarea class="fi" id="a-transf" style="min-height:60px"></textarea></div>
+          <div><label class="fl">Indicador de risco</label><select class="fi" id="a-risco"><option>Sem indicadores</option><option>Ideação suicida passiva</option><option>Ideação suicida ativa</option><option>Autolesão</option><option>Risco para outros</option></select></div>
+        </div>
+      </div>
+      <div class="fa"><button class="btn btn-o" onclick="showSec('pacientes')">Cancelar</button><button class="btn btn-p" id="btn-an" onclick="salvarAnamnese()">📁 Salvar prontuário no Drive</button></div>
+    </div>
+    <!-- EVOLUÇÃO -->
+    <div id="sec-evolucao" class="sec">
+      <div class="sec-hdr"><h1 class="sec-title">Registro de <em>sessão</em></h1><span class="badge badge-p">📁 Adiciona ao prontuário</span></div>
+      <div class="card">
+        <div class="fg">
+          <div class="ff"><label class="fl">Paciente *</label><select class="fi" id="ev-pac"><option value="">Selecione</option></select></div>
+          <div><label class="fl">Data da sessão *</label><input type="date" class="fi" id="ev-data"></div>
+          <div><label class="fl">Nº da sessão</label><input type="number" class="fi" id="ev-num" placeholder="Ex: 5" min="1"></div>
+          <div class="ff"><label class="fl">Conteúdo trazido pelo paciente</label><textarea class="fi" id="ev-cont" placeholder="O que o paciente trouxe na sessão..."></textarea></div>
+          <div class="ff"><label class="fl">Intervenções realizadas</label><textarea class="fi" id="ev-interv" placeholder="Técnicas, interpretações, devolutivas..."></textarea></div>
+          <div class="ff"><label class="fl">Impressões clínicas e evolução</label><textarea class="fi" id="ev-imp" placeholder="Hipóteses, mudanças percebidas, transferência..."></textarea></div>
+          <div class="ff"><label class="fl">Planejamento para próxima sessão</label><textarea class="fi" id="ev-plan" placeholder="Temas a retomar, tarefas combinadas..."></textarea></div>
+          <div><label class="fl">Pagamento</label><select class="fi" id="ev-pago"><option value="Pago">Pago</option><option value="Pendente">Pendente</option><option value="Não pago">Não pago</option><option value="Cortesia">Cortesia</option></select></div>
+        </div>
+      </div>
+      <div class="fa"><button class="btn btn-o" onclick="showSec('pacientes')">Cancelar</button><button class="btn btn-p" id="btn-ev" onclick="salvarEv()">📁 Salvar evolução</button></div>
+    </div>
+    <!-- FINANCEIRO -->
+    <div id="sec-financeiro" class="sec">
+      <div class="sec-hdr"><h1 class="sec-title">Financeiro <em>mensal</em></h1>
+        <select class="fi" id="fin-mes" style="width:auto;font-size:13px" onchange="renderFin()"></select></div>
+      <div id="fin-ct"><div class="loading"><div class="spinner"></div> Carregando...</div></div>
+    </div>
+  </main>
+</div>
+<!-- MODAL CONSULTA -->
+<div id="mc-modal" class="modal-ov" style="display:none">
+  <div class="modal">
+    <div class="modal-hdr"><div class="modal-title">Nova consulta</div><button class="modal-x" onclick="closeMC()">×</button></div>
+    <div style="display:flex;flex-direction:column;gap:.875rem">
+      <div><label class="fl">Paciente</label><select class="fi" id="mc-pac"><option value="">Selecione</option></select></div>
+      <div class="fg">
+        <div><label class="fl">Data *</label><input type="date" class="fi" id="mc-data"></div>
+        <div><label class="fl">Horário *</label><input type="time" class="fi" id="mc-hora"></div>
+      </div>
+      <div><label class="fl">Duração</label><select class="fi" id="mc-dur"><option value="50">50 min</option><option value="60">60 min</option><option value="45">45 min</option><option value="90">90 min</option></select></div>
+      <div><label class="fl">Observação</label><input class="fi" id="mc-obs" placeholder="Ex: Sessão de devolutiva..."></div>
+    </div>
+    <div class="fa"><button class="btn btn-o" onclick="closeMC()">Cancelar</button><button class="btn btn-p" id="btn-mc" onclick="criarConsulta()">📅 Criar no Google Agenda</button></div>
+  </div>
+</div>
+<div class="toast" id="toast"></div>
+<script src="https://apis.google.com/js/api.js"></script>
+<script>
+const SCOPES='https://www.googleapis.com/auth/calendar https://www.googleapis.com/auth/drive.file https://www.googleapis.com/auth/drive.metadata.readonly https://www.googleapis.com/auth/userinfo.email';
+let token=null,files=[],CID='';
+
+function iniciarAuth(){
+  CID=document.getElementById('cid').value.trim();
+  if(!CID||!CID.includes('.apps.googleusercontent.com')){toast('Cole um Client ID válido.');return;}
+  localStorage.setItem('gCID',CID);
+  const s=document.createElement('script');s.src='https://accounts.google.com/gsi/client';
+  s.onload=()=>{
+    const tc=google.accounts.oauth2.initTokenClient({client_id:CID,scope:SCOPES,callback:(r)=>{
+      if(r.error){toast('Erro: '+r.error);return;}token=r.access_token;onLogin();
+    }});tc.requestAccessToken({prompt:'consent'});
+  };document.head.appendChild(s);
+}
+
+function onLogin(){
+  fetch('https://www.googleapis.com/oauth2/v3/userinfo',{headers:{Authorization:'Bearer '+token}})
+    .then(r=>r.json()).then(u=>document.getElementById('uemail').textContent=u.email||'');
+  document.getElementById('auth-screen').style.display='none';
+  document.getElementById('app').style.display='block';
+  loadFiles().then(()=>{loadAgenda();popFinMes();});
+}
+function sair(){token=null;location.reload();}
+
+function showSec(id){
+  document.querySelectorAll('.sec').forEach(s=>s.classList.remove('active'));
+  document.querySelectorAll('.ni').forEach(n=>n.classList.remove('active'));
+  document.getElementById('sec-'+id).classList.add('active');
+  const m={agenda:0,pacientes:1,anamnese:3,evolucao:4,financeiro:6};
+  if(m[id]!==undefined) document.querySelectorAll('.ni')[m[id]].classList.add('active');
+  if(id==='pacientes') renderPacs();
+  if(id==='evolucao'){setEvDate();popEvPac();}
+  if(id==='financeiro') renderFin();
+}
+
+// DRIVE
+async function mpUpload(method,url,meta,txt){
+  const b='vfb_xyz',m=JSON.stringify(meta);
+  const body=`--${b}\r\nContent-Type: application/json; charset=UTF-8\r\n\r\n${m}\r\n--${b}\r\nContent-Type: text/plain; charset=UTF-8\r\n\r\n${txt}\r\n--${b}--`;
+  const r=await fetch(url,{method,headers:{Authorization:'Bearer '+token,'Content-Type':`multipart/related; boundary=${b}`},body});
+  if(!r.ok) throw new Error('Drive '+r.status+': '+await r.text());
+  return r.json();
+}
+async function loadFiles(){
+  try{
+    const r=await fetch("https://www.googleapis.com/drive/v3/files?q=name+contains+'Prontu%C3%A1rio'&fields=files(id,name,modifiedTime,description)&orderBy=modifiedTime+desc&pageSize=200",
+      {headers:{Authorization:'Bearer '+token}});
+    if(!r.ok) throw new Error(await r.text());
+    files=(await r.json()).files||[];
+  }catch(e){console.error(e);files=[];}
+}
+async function createDoc(nome,txt,valor){
+  return mpUpload('POST','https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart&fields=id,name,webViewLink',
+    {name:`Prontuário – ${nome}`,mimeType:'application/vnd.google-apps.document',description:valor?String(valor):''},txt);
+}
+async function appendDoc(fid,novo){
+  const r=await fetch(`https://www.googleapis.com/drive/v3/files/${fid}/export?mimeType=text/plain`,{headers:{Authorization:'Bearer '+token}});
+  if(!r.ok) throw new Error('Export: '+await r.text());
+  const cur=await r.text();
+  return mpUpload('PATCH',`https://www.googleapis.com/upload/drive/v3/files/${fid}?uploadType=multipart`,
+    {mimeType:'application/vnd.google-apps.document'},cur+novo);
+}
+async function readDoc(fid){
+  const r=await fetch(`https://www.googleapis.com/drive/v3/files/${fid}/export?mimeType=text/plain`,{headers:{Authorization:'Bearer '+token}});
+  if(!r.ok) throw new Error('Read failed');
+  return r.text();
+}
+
+// AGENDA
+async function loadAgenda(){
+  const el=document.getElementById('agenda-ct');
+  el.innerHTML='<div class="loading"><div class="spinner"></div> Carregando agenda...</div>';
+  const now=new Date(),dow=now.getDay();
+  const mon=new Date(now);mon.setDate(now.getDate()-(dow===0?6:dow-1));mon.setHours(0,0,0,0);
+  const sun=new Date(mon);sun.setDate(mon.getDate()+6);sun.setHours(23,59,59,999);
+  try{
+    const r=await fetch(`https://www.googleapis.com/calendar/v3/calendars/primary/events?timeMin=${mon.toISOString()}&timeMax=${sun.toISOString()}&singleEvents=true&orderBy=startTime&maxResults=100`,
+      {headers:{Authorization:'Bearer '+token}});
+    if(!r.ok) throw new Error(await r.text());
+    renderAgenda((await r.json()).items||[],mon);
+  }catch(e){
+    el.innerHTML='<div class="empty"><div class="empty-icon">📅</div><div class="empty-t">Erro ao carregar agenda</div><div style="font-size:12px">Verifique se a Google Calendar API está ativada.</div></div>';
+    console.error(e);
+  }
+}
+function renderAgenda(evs,ws){
+  const el=document.getElementById('agenda-ct');
+  const today=new Date().toISOString().split('T')[0];
+  const days=['Seg','Ter','Qua','Qui','Sex','Sáb','Dom'];
+  let wg='<div class="week-grid">';
+  for(let i=0;i<7;i++){
+    const d=new Date(ws);d.setDate(ws.getDate()+i);
+    const ds=d.toISOString().split('T')[0];
+    const de=evs.filter(e=>(e.start.dateTime||e.start.date||'').startsWith(ds));
+    wg+=`<div class="day-col${ds===today?' today':''}" onclick="abrirMC('${ds}')">
+      <div class="day-label">${days[i]}</div><div class="day-num">${d.getDate()}</div>
+      ${de.map(e=>{const t=e.start.dateTime?new Date(e.start.dateTime).toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'}):'';return`<div class="day-event">${t} ${e.summary||''}</div>`;}).join('')}
+    </div>`;
+  }
+  wg+='</div>';
+  const te=evs.filter(e=>(e.start.dateTime||e.start.date||'').startsWith(today)).sort((a,b)=>(a.start.dateTime||a.start.date).localeCompare(b.start.dateTime||b.start.date));
+  const met=`<div class="metrics">
+    <div class="metric"><div class="m-label">Eventos esta semana</div><div class="m-value">${evs.length}</div></div>
+    <div class="metric"><div class="m-label">Hoje</div><div class="m-value">${te.length}</div></div>
+    <div class="metric"><div class="m-label">Pacientes no Drive</div><div class="m-value">${files.length}</div></div>
+    <div class="metric"><div class="m-label">Semana de</div><div class="m-value" style="font-size:14px">${new Date(ws).toLocaleDateString('pt-BR',{day:'numeric',month:'short'})}</div></div>
+  </div>`;
+  let list=`<div class="card"><div class="card-title">Hoje — ${new Date().toLocaleDateString('pt-BR',{weekday:'long',day:'numeric',month:'long'})}</div>`;
+  if(!te.length) list+='<div style="color:var(--text3);font-size:13px;padding:.5rem 0">Nenhum evento hoje.</div>';
+  else te.forEach(e=>{
+    const s=e.start.dateTime?new Date(e.start.dateTime).toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'}):'dia todo';
+    const en=e.end?.dateTime?new Date(e.end.dateTime).toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'}):'';
+    list+=`<div class="ev-row"><span class="ev-time">${s}${en?' – '+en:''}</span><span class="ev-dot"></span><div><div class="ev-title">${e.summary||'(sem título)'}</div>${e.description?`<div class="ev-sub">${e.description}</div>`:''}</div></div>`;
+  });
+  list+='</div>';
+  el.innerHTML=met+wg+list;
+}
+
+// MODAL CONSULTA
+function abrirMC(data=''){
+  const sel=document.getElementById('mc-pac');
+  sel.innerHTML='<option value="">Selecione</option>';
+  files.forEach(f=>{const n=f.name.replace(/^Prontuário\s*[–-]\s*/i,'');sel.innerHTML+=`<option value="${n}">${n}</option>`;});
+  document.getElementById('mc-data').value=data||new Date().toISOString().split('T')[0];
+  document.getElementById('mc-hora').value='09:00';
+  document.getElementById('mc-modal').style.display='flex';
+}
+function closeMC(){document.getElementById('mc-modal').style.display='none';}
+async function criarConsulta(){
+  const pac=document.getElementById('mc-pac').value;
+  const data=document.getElementById('mc-data').value;
+  const hora=document.getElementById('mc-hora').value;
+  const dur=parseInt(document.getElementById('mc-dur').value);
+  if(!data||!hora){toast('Preencha data e horário.');return;}
+  const btn=document.getElementById('btn-mc');
+  btn.disabled=true;btn.textContent='Criando...';
+  const st=new Date(`${data}T${hora}:00`);
+  const en=new Date(st.getTime()+dur*60000);
+  try{
+    const r=await fetch('https://www.googleapis.com/calendar/v3/calendars/primary/events',{
+      method:'POST',headers:{Authorization:'Bearer '+token,'Content-Type':'application/json'},
+      body:JSON.stringify({summary:pac?`Sessão – ${pac}`:'Sessão de psicoterapia',
+        description:document.getElementById('mc-obs').value||'Psicóloga: Vitória Freitas — CRP 05/72596',
+        start:{dateTime:st.toISOString(),timeZone:'America/Sao_Paulo'},
+        end:{dateTime:en.toISOString(),timeZone:'America/Sao_Paulo'}})
+    });
+    if(!r.ok) throw new Error(await r.text());
+    toast(`✓ Consulta criada na agenda${pac?' para '+pac:''}!`);
+    closeMC();loadAgenda();
+  }catch(e){toast('Erro: '+e.message);console.error(e);}
+  btn.disabled=false;btn.textContent='📅 Criar no Google Agenda';
+}
+
+// PACIENTES
+function renderPacs(){
+  const el=document.getElementById('pac-ct');
+  if(!files.length){el.innerHTML='<div class="empty"><div class="empty-icon">👤</div><div class="empty-t">Nenhum prontuário no Drive</div><div style="font-size:12px">Crie a primeira anamnese pelo menu.</div></div>';return;}
+  const met=`<div class="metrics">
+    <div class="metric"><div class="m-label">Total de pacientes</div><div class="m-value">${files.length}</div></div>
+    <div class="metric"><div class="m-label">Prontuários no Drive</div><div class="m-value">${files.length}</div></div>
+    <div class="metric"><div class="m-label">Último atualizado</div><div class="m-value" style="font-size:14px">${files[0]?new Date(files[0].modifiedTime).toLocaleDateString('pt-BR'):'—'}</div></div>
+  </div>`;
+  const grid=files.map(f=>{
+    const nm=f.name.replace(/^Prontuário\s*[–-]\s*/i,'');
+    const init=nm.split(' ').slice(0,2).map(w=>w[0]||'').join('').toUpperCase();
+    return`<div class="pcard">
+      <div class="p-av">${init}</div>
+      <div class="p-name">${nm}</div>
+      <div class="p-meta">Atualizado ${new Date(f.modifiedTime).toLocaleDateString('pt-BR')}</div>
+      ${f.description?`<div class="p-valor">R$ ${f.description}/sessão</div>`:''}
+      <div class="p-acts">
+        <button class="pbtn pp" onclick="verProntuario('${f.id}','${nm.replace(/'/g,"\\'")}')">Ver prontuário</button>
+        <button class="pbtn" onclick="irEv('${f.id}','${nm.replace(/'/g,"\\'")}')">+ Sessão</button>
+        <button class="pbtn" onclick="abrirMC()">+ Consulta</button>
+      </div>
+    </div>`;
+  }).join('');
+  el.innerHTML=met+'<div class="pgrid">'+grid+'</div>';
+}
+
+// VER PRONTUÁRIO
+async function verProntuario(fid,nome){
+  document.querySelectorAll('.sec').forEach(s=>s.classList.remove('active'));
+  document.querySelectorAll('.ni').forEach(n=>n.classList.remove('active'));
+  document.getElementById('sec-prontuario').classList.add('active');
+  document.getElementById('btn-add-ev').onclick=()=>irEv(fid,nome);
+  const el=document.getElementById('pv-ct');
+  el.innerHTML='<div class="loading"><div class="spinner"></div> Carregando prontuário...</div>';
+  try{
+    const txt=await readDoc(fid);
+    renderPV(txt,nome,fid);
+  }catch(e){el.innerHTML='<div class="empty"><div class="empty-icon">📋</div><div class="empty-t">Erro ao carregar</div></div>';console.error(e);}
+}
+
+function esc(t){return(t||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+
+function renderPV(txt,nome,fid){
+  const el=document.getElementById('pv-ct');
+  const parts=txt.split(/━{5,}/g);
+  const info=parts[0]||'';
+  const gf=(label)=>{const m=info.match(new RegExp(label+':\\s*(.+)'));return m?m[1].trim():'—';};
+
+  let html=`<div class="pv-wrap">
+    <div class="pv-hdr">
+      <div class="pv-name">${esc(nome)}</div>
+      <div class="pv-meta">${gf('Profissão / Ocupação')} · ${gf('Formato')} · ${gf('Valor da sessão') !== '—' ? gf('Valor da sessão')+'/sessão' : 'Valor não cadastrado'}</div>
+    </div>
+    <div class="pv-body">`;
+
+  // Sections (non-evolucao)
+  const secs=[];
+  const evcs=[];
+  parts.forEach(p=>{
+    const lines=p.trim().split('\n').filter(l=>l.trim());
+    if(!lines.length) return;
+    const title=lines[0].trim();
+    if(/^SESS[AÃ]O\s+\S+/i.test(title)) evcs.push({title,body:lines.slice(1).join('\n')});
+    else if(title.length>2) secs.push({title,body:lines.slice(1).join('\n')});
+  });
+
+  // Show anamnese sections (skip header and REGISTRO DE EVOLUÇÕES)
+  secs.forEach(s=>{
+    if(s.title.includes('PRONTUÁRIO')||s.title==='REGISTRO DE EVOLUÇÕES') return;
+    html+=`<div class="pv-sec"><div class="pv-sec-t">${esc(s.title)}</div><div class="pv-txt">${esc(s.body.trim()||'—')}</div></div>`;
+  });
+
+  // Evolucoes
+  if(evcs.length){
+    html+=`<div class="pv-sec"><div class="pv-sec-t">Registro de evoluções (${evcs.length} sessão${evcs.length>1?'s':''})</div>`;
+    evcs.reverse().forEach(e=>{
+      const dm=e.title.match(/SESS[AÃ]O\s+(\S+)\s*[—-]\s*(.+)/i);
+      const num=dm?dm[1]:'?',date=dm?dm[2]:'';
+      const getbl=(label)=>{const m=e.body.match(new RegExp(label+':\\n([\\s\\S]*?)(?=\\n[A-Za-záéíóúàâêôãõç].+:|$)'));return m?m[1].trim():'';};
+      const pg=e.body.match(/Pagamento:\s*(.+)/)?.[1]||'';
+      html+=`<div class="evc">
+        <div class="evc-hdr"><span class="evc-title">Sessão ${esc(num)}</span><span class="evc-date">${esc(date)}${pg?' · '+esc(pg):''}</span></div>`;
+      [['Conteúdo trazido','Conteúdo trazido'],['Intervenções realizadas','Intervenções'],['Impressões clínicas e evolução','Impressões clínicas'],['Planejamento para próxima sessão','Planejamento']].forEach(([k,lbl])=>{
+        const v=getbl(k);
+        if(v&&v!=='—') html+=`<div class="evc-bl"><div class="evc-bl-label">${lbl}</div><div class="evc-bl-txt">${esc(v)}</div></div>`;
+      });
+      html+='</div>';
+    });
+    html+='</div>';
+  }
+
+  html+=`<div style="margin-top:1.5rem;padding-top:1rem;border-top:1px solid var(--border)">
+    <button class="btn btn-o" onclick="window.open('https://drive.google.com/file/d/${fid}/view','_blank')">Abrir no Drive ↗</button>
+  </div></div></div>`;
+  el.innerHTML=html;
+}
+
+// ANAMNESE
+function v(id){return(document.getElementById(id)?.value||'').trim()||'—';}
+function checks(){return Array.from(document.querySelectorAll('.ec:checked')).map(c=>c.value).join(', ')||'—';}
+
+async function salvarAnamnese(){
+  const nome=document.getElementById('a-nome').value.trim();
+  if(!nome){toast('Preencha o nome do paciente.');return;}
+  const btn=document.getElementById('btn-an');
+  btn.disabled=true;btn.textContent='Salvando no Drive...';
+  const nasc=document.getElementById('a-nasc').value;
+  const idade=nasc?Math.floor((new Date()-new Date(nasc+'T12:00:00'))/(365.25*24*3600*1000))+' anos':'—';
+  const valor=document.getElementById('a-valor').value;
+  const txt=`PRONTUÁRIO PSICOLÓGICO
+Psicóloga responsável: Vitória Freitas — CRP 05/72596
+Data de criação: ${new Date().toLocaleDateString('pt-BR',{day:'2-digit',month:'long',year:'numeric'})}
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+1. IDENTIFICAÇÃO
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Nome completo: ${nome}
+Nome social: ${v('a-soc')}
+CPF: ${v('a-cpf')}
+Data de nascimento: ${nasc?new Date(nasc+'T12:00:00').toLocaleDateString('pt-BR'):'—'} (${idade})
+Sexo / Gênero: ${v('a-gen')}
+Estado civil: ${v('a-civil')}
+Profissão / Ocupação: ${v('a-prof')}
+Escolaridade: ${v('a-escol')}
+Telefone: ${v('a-tel')}
+E-mail: ${v('a-email')}
+Endereço: ${v('a-end')}
+Cidade / Estado: ${v('a-cidade')}
+Pessoa de referência: ${v('a-ref')} — ${v('a-ref-tel')}
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+2. DADOS DO ATENDIMENTO
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Formato: ${v('a-modal')}
+Encaminhamento: ${v('a-enc')}
+Valor da sessão: ${valor?'R$ '+valor:'—'}
+Frequência: ${v('a-freq')}
+Terapia anterior: ${v('a-tant')} | Abordagem: ${v('a-abord')} | Duração: ${v('a-ttemps')}
+Experiência anterior: ${v('a-exp-ant')}
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+3. QUEIXA PRINCIPAL
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Motivação:
+${v('a-queixa')}
+Há quanto tempo: ${v('a-tqueixa')}
+Impacto:
+${v('a-impacto')}
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+4. EXPECTATIVAS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+O que espera:
+${v('a-expect')}
+O que quer mudar:
+${v('a-mudar')}
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+5. HISTÓRIA PESSOAL
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+INFÂNCIA
+Como descreve: ${v('a-inf')}
+Quem participou da criação: ${v('a-cria')}
+Relação com cuidadores: ${v('a-cuid')}
+Recordações marcantes: ${v('a-rec')}
+Violência/abandono/traumas: ${v('a-traum')}
+ADOLESCÊNCIA
+Como foi: ${v('a-adol')}
+Relações sociais/familiares: ${v('a-rel-adol')}
+Acontecimentos importantes: ${v('a-ac-adol')}
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+6. HISTÓRIA FAMILIAR
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Com quem mora: ${v('a-mora')}
+Dinâmica familiar: ${v('a-din')}
+Relação com a mãe: ${v('a-mae')}
+Relação com o pai: ${v('a-pai')}
+Relação com irmãos: ${v('a-irm')}
+Relação com parceiro/a: ${v('a-parc')}
+Conflitos frequentes: ${v('a-conf')}
+Histórico — transtornos: ${v('a-hpsic')}
+Histórico — dep. química: ${v('a-hdep')}
+Histórico — violência: ${v('a-hviol')}
+Histórico — suicídio: ${v('a-hsuic')}
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+7. RELACIONAMENTOS AFETIVOS E SOCIAIS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Como se relaciona afetivamente: ${v('a-afet')}
+Amizades e rede de apoio: ${v('a-amigos')}
+Dificuldade em confiar: ${v('a-vinc')}
+Solidão: ${v('a-sol')}
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+8. VIDA ACADÊMICA E PROFISSIONAL
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Experiência escolar: ${v('a-esc')}
+Dificuldades de aprendizagem: ${v('a-dif')}
+Vida profissional atual: ${v('a-profl')}
+Trabalho gera sofrimento: ${v('a-tsofrj')}
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+9. SAÚDE FÍSICA
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Doenças/condições: ${v('a-doenc')}
+Medicações: ${v('a-meds')}
+Psiquiatria anterior: ${v('a-psiq')}
+Internação: ${v('a-int')}
+Sono: ${v('a-sono')} | Alimentação: ${v('a-alim')} | Libido: ${v('a-lib')} | Energia: ${v('a-enrg')}
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+10. SAÚDE MENTAL
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Sente com frequência: ${checks()}
+Descrição: ${v('a-emo-desc')}
+Crises de pânico: ${v('a-panic')}
+Ideação suicida: ${v('a-suic')}
+Automutilação: ${v('a-autom')}
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+11. SUBSTÂNCIAS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Álcool: ${v('a-alc')} | Cigarro: ${v('a-cig')} | Maconha: ${v('a-mac')} | Outras: ${v('a-osub')}
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+12. SEXUALIDADE
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+${v('a-sex')}
+Questões a trabalhar: ${v('a-sext')}
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+13. ROTINA E AUTOCUIDADO
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Rotina: ${v('a-rot')}
+Autocuidado: ${v('a-auto')}
+Hobbies: ${v('a-hob')}
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+14. OBSERVAÇÕES CLÍNICAS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Impressões iniciais:
+${v('a-imp')}
+Afetos predominantes: ${v('a-afts')}
+Dinâmica familiar observada: ${v('a-dinobs')}
+Mecanismos de defesa: ${v('a-def')}
+Hipóteses clínicas:
+${v('a-hip')}
+Transferência/contratransferência: ${v('a-transf')}
+Indicador de risco: ${v('a-risco')}
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+REGISTRO DE EVOLUÇÕES
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+`;
+  try{
+    const file=await createDoc(nome,txt,valor);
+    await loadFiles();
+    toast(`✓ Prontuário de ${nome} criado no Drive!`);
+    btn.disabled=false;btn.textContent='📁 Salvar prontuário no Drive';
+    setTimeout(()=>window.open(file.webViewLink,'_blank'),600);
+  }catch(e){
+    toast('Erro ao salvar: '+e.message);console.error(e);
+    btn.disabled=false;btn.textContent='📁 Salvar prontuário no Drive';
+  }
+}
+
+// EVOLUÇÃO
+function setEvDate(){const d=document.getElementById('ev-data');if(!d.value)d.value=new Date().toISOString().split('T')[0];}
+function popEvPac(sid=''){
+  const sel=document.getElementById('ev-pac');
+  sel.innerHTML='<option value="">Selecione o paciente</option>';
+  files.forEach(f=>{const n=f.name.replace(/^Prontuário\s*[–-]\s*/i,'');sel.innerHTML+=`<option value="${f.id}"${f.id===sid?' selected':''}>${n}</option>`;});
+}
+function irEv(fid,nome){showSec('evolucao');setTimeout(()=>popEvPac(fid),100);}
+async function salvarEv(){
+  const fid=document.getElementById('ev-pac').value;
+  const pac=document.getElementById('ev-pac').selectedOptions[0]?.text;
+  const dt=document.getElementById('ev-data').value;
+  if(!fid){toast('Selecione um paciente.');return;}
+  if(!dt){toast('Informe a data.');return;}
+  const btn=document.getElementById('btn-ev');
+  btn.disabled=true;btn.textContent='Salvando...';
+  const num=document.getElementById('ev-num').value||'?';
+  const df=new Date(dt+'T12:00:00').toLocaleDateString('pt-BR',{day:'2-digit',month:'long',year:'numeric'});
+  const novo=`
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+SESSÃO ${num} — ${df}
+Pagamento: ${document.getElementById('ev-pago').value}
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Conteúdo trazido:
+${document.getElementById('ev-cont').value||'—'}
+
+Intervenções realizadas:
+${document.getElementById('ev-interv').value||'—'}
+
+Impressões clínicas e evolução:
+${document.getElementById('ev-imp').value||'—'}
+
+Planejamento para próxima sessão:
+${document.getElementById('ev-plan').value||'—'}
+`;
+  try{
+    await appendDoc(fid,novo);
+    toast(`✓ Sessão ${num} salva no prontuário de ${pac}!`);
+    ['ev-cont','ev-interv','ev-imp','ev-plan','ev-num'].forEach(id=>document.getElementById(id).value='');
+  }catch(e){toast('Erro: '+e.message);console.error(e);}
+  btn.disabled=false;btn.textContent='📁 Salvar evolução';
+}
+
+// FINANCEIRO
+function popFinMes(){
+  const sel=document.getElementById('fin-mes');
+  const now=new Date();sel.innerHTML='';
+  for(let i=0;i<6;i++){
+    const d=new Date(now.getFullYear(),now.getMonth()-i,1);
+    const val=`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}`;
+    sel.innerHTML+=`<option value="${val}">${d.toLocaleDateString('pt-BR',{month:'long',year:'numeric'})}</option>`;
+  }
+}
+async function renderFin(){
+  const el=document.getElementById('fin-ct');
+  el.innerHTML='<div class="loading"><div class="spinner"></div> Carregando...</div>';
+  const mes=document.getElementById('fin-mes').value;
+  if(!mes) return;
+  const [ano,m]=mes.split('-').map(Number);
+  const ini=new Date(ano,m-1,1,0,0,0).toISOString();
+  const fim=new Date(ano,m,0,23,59,59).toISOString();
+  try{
+    const r=await fetch(`https://www.googleapis.com/calendar/v3/calendars/primary/events?timeMin=${encodeURIComponent(ini)}&timeMax=${encodeURIComponent(fim)}&singleEvents=true&orderBy=startTime&maxResults=500`,
+      {headers:{Authorization:'Bearer '+token}});
+    if(!r.ok) throw new Error(await r.text());
+    const sessoes=((await r.json()).items||[]).filter(e=>e.summary&&/sess[aã]o/i.test(e.summary));
+    const byPac={};
+    sessoes.forEach(e=>{
+      const mm=e.summary.match(/sess[aã]o\s*[–—-]\s*(.+)/i);
+      const pac=mm?mm[1].trim():'Outros';
+      if(!byPac[pac]) byPac[pac]={n:0,val:0};
+      byPac[pac].n++;
+      const df=files.find(f=>f.name.toLowerCase().includes(pac.toLowerCase()));
+      byPac[pac].val=df?.description?parseFloat(df.description)||0:0;
+    });
+    const rows=Object.entries(byPac);
+    const totN=rows.reduce((s,[,r])=>s+r.n,0);
+    const totV=rows.reduce((s,[,r])=>s+(r.n*r.val),0);
+    const met=`<div class="metrics">
+      <div class="metric"><div class="m-label">Sessões no mês</div><div class="m-value">${totN}</div></div>
+      <div class="metric"><div class="m-label">Total previsto</div><div class="m-value" style="font-size:20px">R$ ${totV.toLocaleString('pt-BR',{minimumFractionDigits:0})}</div><div class="m-sub">baseado nos valores cadastrados</div></div>
+      <div class="metric"><div class="m-label">Pacientes ativos</div><div class="m-value">${rows.length}</div></div>
+      <div class="metric"><div class="m-label">Ticket médio</div><div class="m-value" style="font-size:20px">R$ ${totN?Math.round(totV/totN):0}</div></div>
+    </div>`;
+    let tbl=`<div class="card"><div class="card-title">Detalhamento — ${new Date(ano,m-1,1).toLocaleDateString('pt-BR',{month:'long',year:'numeric'})}</div>
+      <table class="ftbl"><thead><tr><th>Paciente</th><th>Sessões</th><th>Valor/sessão</th><th>Total</th></tr></thead><tbody>`;
+    if(!rows.length){
+      tbl+=`<tr><td colspan="4" style="text-align:center;padding:2rem;color:var(--text3)">Nenhuma sessão encontrada.<br><small>Os eventos da agenda precisam ter "Sessão –" no título (ex: <em>Sessão – Maria</em>).</small></td></tr>`;
+    } else {
+      rows.forEach(([pac,d])=>{
+        const t=d.n*d.val;
+        tbl+=`<tr><td><strong>${pac}</strong></td><td>${d.n}</td>
+          <td>${d.val?'R$ '+d.val.toLocaleString('pt-BR'):'<span style="color:var(--text3);font-size:12px">Cadastre na anamnese</span>'}</td>
+          <td><strong>${t?'R$ '+t.toLocaleString('pt-BR',{minimumFractionDigits:0}):'—'}</strong></td></tr>`;
+      });
+      tbl+=`<tr class="ftot"><td>TOTAL</td><td>${totN}</td><td>—</td><td style="color:var(--green)">R$ ${totV.toLocaleString('pt-BR',{minimumFractionDigits:0})}</td></tr>`;
+    }
+    tbl+='</tbody></table></div>';
+    const aviso=`<div class="card" style="background:var(--s2);border-color:var(--border2)"><div style="font-size:12px;color:var(--text2);line-height:1.6">💡 <strong>Como funciona:</strong> O financeiro lê os eventos do Google Agenda com "Sessão" no título. O valor vem do campo cadastrado na anamnese de cada paciente. Crie as consultas usando o botão "+ Nova consulta".</div></div>`;
+    el.innerHTML=met+tbl+aviso;
+  }catch(e){
+    el.innerHTML='<div class="empty"><div class="empty-icon">💰</div><div class="empty-t">Erro ao carregar</div><div style="font-size:12px">'+e.message+'</div></div>';
+    console.error(e);
+  }
+}
+
+function toast(msg,dur=4500){
+  const t=document.getElementById('toast');
+  t.textContent=msg;t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),dur);
+}
+
+window.addEventListener('load',()=>{
+  const s=localStorage.getItem('gCID');
+  if(s) document.getElementById('cid').value=s;
+  const cpf=document.getElementById('a-cpf');
+  if(cpf) cpf.addEventListener('input',e=>{
+    let v=e.target.value.replace(/\D/g,'');
+    v=v.replace(/(\d{3})(\d)/,'$1.$2').replace(/(\d{3})(\d)/,'$1.$2').replace(/(\d{3})(\d{1,2})$/,'$1-$2');
+    e.target.value=v;
+  });
+});
+</script>
+</body>
+</html>
